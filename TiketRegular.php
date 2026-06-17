@@ -16,10 +16,10 @@ class TiketRegular extends Tiket {
         $this->lokasiBaris = $data['lokasi_baris'] ?? '-';
     }
 
-    // Mengimplementasikan metode hitungTotalHarga
+    // Mengimplementasikan metode hitungTotalHarga (Disesuaikan ke Logika Bisnis Baru)
     public function hitungTotalHarga() {
-        $biayaTambahan = 5000; // Contoh biaya penanganan/pajak reguler
-        return ($this->hargaDasarTiket + $biayaTambahan) * $this->jumlah_kursi;
+        // Tarif standar murni tanpa biaya tambahan fasilitas
+        return $this->jumlah_kursi * $this->hargaDasarTiket;
     }
 
     // Mengimplementasikan metode tampilkanInfoFasilitas
@@ -33,4 +33,27 @@ class TiketRegular extends Tiket {
     // Getter spesifik
     public function getTipeAudio() { return $this->tipeAudio; }
     public function getLokasiBaris() { return $this->lokasiBaris; }
+
+    // =========================================================================
+    // METHOD BARU: MENAMPILKAN SEMUA DATA STUDIO REGULAR SAJA
+    // =========================================================================
+    /**
+     * Mengambil semua data dari database yang memiliki jenis_studio = 'Regular'
+     * @param PDO $pdo Koneksi database
+     * @return array Kumpulan objek TiketRegular
+     */
+    public static function displayAllRegular($pdo) {
+        // Query SQL khusus untuk memfilter studio Regular saja
+        $stmt = $pdo->prepare("SELECT * FROM tabel_tiket WHERE jenis_studio = 'Regular'");
+        $stmt->execute();
+        $rows = $stmt->fetchAll();
+
+        $daftarTiketRegular = [];
+        foreach ($rows as $row) {
+            // Mengubah setiap baris data menjadi objek TiketRegular konkrit
+            $daftarTiketRegular[] = new self($row);
+        }
+
+        return $daftarTiketRegular;
+    }
 }

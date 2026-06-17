@@ -15,10 +15,10 @@ class TiketVelvet extends Tiket {
         $this->layananButler     = $data['layanan_butler'] ?? 'No Butler';
     }
 
-    // Mengimplementasikan metode hitungTotalHarga
+    // Mengimplementasikan metode hitungTotalHarga (Disesuaikan ke Logika Bisnis Baru)
     public function hitungTotalHarga() {
-        $biayaPremiumService = 75000; // Tambahan biaya kenyamanan kasur & butler
-        return ($this->hargaDasarTiket + $biayaPremiumService) * $this->jumlah_kursi;
+        // Dikenakan surcharge/biaya tambahan kelas premium sebesar 50% dari total harga dasar
+        return ($this->jumlah_kursi * $this->hargaDasarTiket) * 1.50;
     }
 
     // Mengimplementasikan metode tampilkanInfoFasilitas
@@ -32,4 +32,27 @@ class TiketVelvet extends Tiket {
     // Getter spesifik
     public function getBantalSelimutPack() { return $this->bantalSelimutPack; }
     public function getLayananButler() { return $this->layananButler; }
+
+    // =========================================================================
+    // METHOD BARU: MENAMPILKAN SEMUA DATA STUDIO VELVET SAJA
+    // =========================================================================
+    /**
+     * Mengambil semua data dari database yang memiliki jenis_studio = 'Velvet'
+     * @param PDO $pdo Koneksi database
+     * @return array Kumpulan objek TiketVelvet
+     */
+    public static function displayAllVelvet($pdo) {
+        // Query SQL khusus untuk memfilter studio Velvet saja
+        $stmt = $pdo->prepare("SELECT * FROM tabel_tiket WHERE jenis_studio = 'Velvet'");
+        $stmt->execute();
+        $rows = $stmt->fetchAll();
+
+        $daftarTiketVelvet = [];
+        foreach ($rows as $row) {
+            // Mengubah setiap baris data menjadi objek TiketVelvet konkrit
+            $daftarTiketVelvet[] = new self($row);
+        }
+
+        return $daftarTiketVelvet;
+    }
 }

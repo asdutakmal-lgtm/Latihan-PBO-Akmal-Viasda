@@ -17,8 +17,8 @@ class TiketIMAX extends Tiket {
 
     // Mengimplementasikan metode hitungTotalHarga
     public function hitungTotalHarga() {
-        $biayaTeknologiIMAX = 25000; // Tambahan biaya imersif IMAX & 3D
-        return ($this->hargaDasarTiket + $biayaTeknologiIMAX) * $this->jumlah_kursi;
+        // Diubah menjadi + 35000 sesuai logika bisnis baru
+        return ($this->jumlah_kursi * $this->hargaDasarTiket) + 35000; 
     }
 
     // Mengimplementasikan metode tampilkanInfoFasilitas
@@ -32,4 +32,27 @@ class TiketIMAX extends Tiket {
     // Getter spesifik
     public function getKacamata3did() { return $this->kacamata3did; }
     public function getEfekGerakFitur() { return $this->efekGerakFitur; }
+
+    // =========================================================================
+    // METHOD BARU: MENAMPILKAN SEMUA DATA STUDIO IMAX SAJA
+    // =========================================================================
+    /**
+     * Mengambil semua data dari database yang memiliki jenis_studio = 'IMAX'
+     * @param PDO $pdo Koneksi database
+     * @return array Kumpulan objek TiketIMAX
+     */
+    public static function displayAllIMAX($pdo) {
+        // Query SQL khusus untuk memfilter studio IMAX saja
+        $stmt = $pdo->prepare("SELECT * FROM tabel_tiket WHERE jenis_studio = 'IMAX'");
+        $stmt->execute();
+        $rows = $stmt->fetchAll();
+
+        $daftarTiketIMAX = [];
+        foreach ($rows as $row) {
+            // Mengubah setiap baris data menjadi objek TiketIMAX konkrit
+            $daftarTiketIMAX[] = new self($row);
+        }
+
+        return $daftarTiketIMAX;
+    }
 }
