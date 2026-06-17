@@ -4,7 +4,7 @@
 $host     = "localhost";
 $username = "root";             // Silakan sesuaikan dengan username MySQL Anda
 $password = "";                 // Silakan sesuaikan dengan password MySQL Anda
-$database = "nama_database_mu"; // Ganti dengan nama database tempat tabel_tiket berada
+$database = "db_latihan_pbo_ti1c_akmalviasda"; // Ganti dengan nama database tempat tabel_tiket berada
 
 try {
     // Inisialisasi koneksi PDO
